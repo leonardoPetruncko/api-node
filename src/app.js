@@ -1,5 +1,6 @@
 import Express from "express";
 import db from "./config/dbConnect.js";
+import livros from "./models/livro.js";
 
 db.on("error", console.log.bind(console, 'Erro de conexão'))
 db.once("open", () => {
@@ -7,20 +8,22 @@ db.once("open", () => {
 })
 
 const app = Express();
-
 app.use(Express.json());
 
-const livros = [
-    {id: 1, titulo: "Senhor dos Aneis"},
-    {id: 2, titulo: "O Hobbit"}
-]
+// const livros = [
+//     {id: 1, titulo: "Senhor dos Aneis"},
+//     {id: 2, titulo: "O Hobbit"}
+// ]
 
 app.get('/', (req, res) => {
     res.status(200).send(`Curso de Node`);
 })
 
 app.get('/livros', (req, res) => {
-    res.status(200).json(livros)
+    livros.find((err, livros) => {
+        res.status(200).json(livros)
+    })
+
 })
 
 app.get('/livros/:id', (req, res) => {
@@ -35,12 +38,12 @@ app.post('/livros', (req, res) => {
 
 app.put('/livros/:id', (req, res) => {
     let index = buscaLivro(req.params.id);
-    livros[index].titulo =req.body.titulo;
+    livros[index].titulo = req.body.titulo;
     res.json(livros);
 })
 
 app.delete('/livros/:id', (req, res) => {
-    let {id} = req.params;
+    let { id } = req.params;
     let index = buscaLivro(id);
     livros.splice(index, 1)
     res.send(`Livro ${id} removido com sucesso`);

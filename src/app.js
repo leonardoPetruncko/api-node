@@ -10,7 +10,7 @@ const livros = [
 ]
 
 app.get('/', (req, res) => {
-    res.status(200).send('Curso de Node');
+    res.status(200).send(`Curso de Node`);
 })
 
 app.get('/livros', (req, res) => {
@@ -24,13 +24,20 @@ app.get('/livros/:id', (req, res) => {
 
 app.post('/livros', (req, res) => {
     livros.push(req.body);
-    res.status(201).send('Livro foi cadastrado com sucesso');
+    res.status(201).send(`Livro foi cadastrado com sucesso`);
 })
 
 app.put('/livros/:id', (req, res) => {
     let index = buscaLivro(req.params.id);
     livros[index].titulo =req.body.titulo;
     res.json(livros);
+})
+
+app.delete('/livros/:id', (req, res) => {
+    let {id} = req.params;
+    let index = buscaLivro(id);
+    livros.splice(index, 1)
+    res.send(`Livro ${id} removido com sucesso`);
 })
 
 function buscaLivro(id) {
